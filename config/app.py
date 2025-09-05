@@ -10,7 +10,7 @@ def get_bands():
     return jsonify(rock_bands), 200
 
 # Obtener un grupo por ID
-@app.route('/futbol/<int:futbol_id>', methods=['GET'])
+@app.route('/futbol/<int:pais_id>', methods=['GET'])
 def get_band(band_id):
     band = next((b for b in rock_bands if b['id'] == band_id), None)
     if band is None:
@@ -32,8 +32,8 @@ def create_band():
     return jsonify(band), 201
 
 # Actualizar un grupo existente
-@app.route('/futbol/<int:band_id>', methods=['PUT'])
-def update_band(band_id):
+@app.route('/futbol/<int:pais_id>', methods=['PUT'])
+def update_band(pais_id):
     band = next((b for b in rock_bands if b['id'] == band_id), None)
     if band is None:
         return jsonify({'error': 'Band not found'}), 404
