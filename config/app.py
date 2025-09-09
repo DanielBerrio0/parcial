@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Obtener todos los grupos
 @app.route('/futbol', methods=['GET'])
-def get_bands():
+def get_futbol():
     return jsonify(rock_bands), 200
 
 # Obtener un grupo por ID
@@ -44,7 +44,7 @@ def update_band(pais_id):
     return jsonify(band), 200
 
 # Eliminar un grupo
-@app.route('/futbol/<int:band_id>', methods=['DELETE'])
+@app.route('/futbol/<int:pais_id>', methods=['DELETE'])
 def delete_band(band_id):
     band = next((b for b in rock_bands if b['id'] == band_id), None)
     if band is None:
