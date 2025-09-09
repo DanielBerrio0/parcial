@@ -11,8 +11,8 @@ def get_futbol():
 
 # Obtener un grupo por ID
 @app.route('/futbol/<int:pais_id>', methods=['GET'])
-def get_band(band_id):
-    band = next((b for b in rock_bands if b['id'] == band_id), None)
+def Paises(pais_id):
+    band = next((b for b in rock_bands if b['id'] == pais_id), None)
     if band is None:
         return jsonify({'error': 'La seleccion no se encontro'}), 404
     return jsonify(band), 200
