@@ -11,25 +11,34 @@ def get_futbol():
 
 # Obtener un grupo por ID
 @app.route('/futbol/<int:pais_id>', methods=['GET'])
-def Paises(pais_id):
-    band = next((b for b in rock_bands if b['id'] == pais_id), None)
-    if band is None:
-        return jsonify({'error': 'La seleccion no se encontro'}), 404
-    return jsonify(band), 200
+def get_pais(pais_id):
+    pais = db_session.query(Paises).filter_by(id=pais_id).first()
+    if not pais:
+        return jsonify({'error': 'La selección no se encontró'}), 404
+
+    return jsonify({
+        'id': pais.id,
+        'nombre_pais': pais.nombre_pais
+    }), 200
+
 
 # Crear un nuevo grupo
 @app.route('/futbol', methods=['POST'])
-def create_band():
-    if not request.json or 'name' not in request.json or 'albums' not in request.json:
-        return jsonify({'error': 'Bad request'}), 400
-    new_id = max(b['id'] for b in rock_bands) + 1 if rock_bands else 1
-    band = {
-        'id': new_id,
-        'name': request.json['name'],
-        'albums': request.json['albums']
-    }
-    rock_bands.append(band)
-    return jsonify(band), 201
+def create_pais():
+    data = request.json
+    if not data or 'nombre_pais' not in data:
+        return jsonify({'error': 'Bad request, falta nombre_pais'}), 400
+    
+    nuevo_pais = Paises(nombre_pais=data['nombre_pais'])
+    db_session.add(nuevo_pais)
+    db_session.commit()
+    
+    return jsonify({
+        'id': nuevo_pais.id,
+        'nombre_pais': nuevo_pais.nombre_pais
+    }), 201
+
+
 
 # Actualizar un grupo existente
 @app.route('/futbol/<int:pais_id>', methods=['PUT'])
