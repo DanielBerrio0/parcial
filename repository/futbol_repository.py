@@ -1,3 +1,6 @@
+from models.futbol_model import Paises
+
+
 class PaisRepository:
     def __init__(self, db_session):
         self.db = db_session
