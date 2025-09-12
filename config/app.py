@@ -42,24 +42,39 @@ def create_pais():
 
 # Actualizar un grupo existente
 @app.route('/futbol/<int:pais_id>', methods=['PUT'])
-def update_band(pais_id):
-    band = next((b for b in rock_bands if b['id'] == band_id), None)
-    if band is None:
-        return jsonify({'error': 'Band not found'}), 404
-    if not request.json:
+def update_pais(pais_id):
+    pais = db_session.query(Paises).filter_by(id=pais_id).first()
+    if pais is None:
+        return jsonify({'error': 'País no encontrado'}), 404
+    
+    data = request.json
+    if not data:
         return jsonify({'error': 'Bad request'}), 400
-    band['name'] = request.json.get('name', band['name'])
-    band['albums'] = request.json.get('albums', band['albums'])
-    return jsonify(band), 200
+    
+    # Actualizamos solo el nombre_pais si está en el JSON
+    if 'nombre_pais' in data:
+        pais.nombre_pais = data['nombre_pais']
+    
+    db_session.commit()
+    
+    return jsonify({
+        'id': pais.id,
+        'nombre_pais': pais.nombre_pais
+    }), 200
+
 
 # Eliminar un grupo
 @app.route('/futbol/<int:pais_id>', methods=['DELETE'])
-def delete_band(band_id):
-    band = next((b for b in rock_bands if b['id'] == band_id), None)
-    if band is None:
-        return jsonify({'error': 'Band not found'}), 404
-    rock_bands.remove(band)
-    return jsonify({'result': 'Band deleted'}), 200
+def delete_pais(pais_id):
+    pais = db_session.query(Paises).filter_by(id=pais_id).first()
+    if pais is None:
+        return jsonify({'error': 'País no encontrado'}), 404
+    
+    db_session.delete(pais)
+    db_session.commit()
+    
+    return jsonify({'result': 'País eliminado'}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
