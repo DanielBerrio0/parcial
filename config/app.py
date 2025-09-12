@@ -2,12 +2,20 @@ from flask import Flask, jsonify, request, abort
 
 app = Flask(__name__)
 
-
+pais_repo = futbol_repository(db_session) 
 
 # Obtener todos los grupos
 @app.route('/futbol', methods=['GET'])
-def get_futbol():
-    return jsonify(rock_bands), 200
+def get_paises():
+    paises = db_session.query(Paises).all()
+    resultado = []
+    for pais in paises:
+        resultado.append({
+            'id': pais.id,
+            'nombre_pais': pais.nombre_pais
+        })
+    return jsonify(resultado), 200
+
 
 # Obtener un grupo por ID
 @app.route('/futbol/<int:pais_id>', methods=['GET'])
