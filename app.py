@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request, abort
 from repository.futbol_repository import PaisRepository
-from database import db_session
+from config.database import get_db_session
 from models.futbol_model import Paises
 
 app = Flask(__name__)
 
+db_session = get_db_session()
 pais_repo = PaisRepository(db_session)
 
 @app.route('/futbol', methods=['GET'])
