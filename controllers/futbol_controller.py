@@ -4,33 +4,56 @@ from repository.futbol_repository import PaisRepository
 futbol_bp = Blueprint("futbol_bp", __name__)
 pais_repo = PaisRepository()
 
-# Obtener todos los países
-@futbol_bp.route("/futbol", methods=["GET"])
+# Obtener todos los países con sus mundiales
+@futbol_bp.route("/", methods=["GET"])
 def get_paises():
     paises = pais_repo.get_all_paises()
-    resultado = [{"id": p.id, "nombre_pais": p.nombre_pais} for p in paises]
+    resultado = []
+    for p in paises:
+        resultado.append({
+            "id": p.id,
+            "nombre_pais": p.nombre_pais,
+            "mundiales": [
+                {"id": m.id, "title": m.title, "pais_id": m.pais_id}
+                for m in p.mundiales
+            ]
+        })
     return jsonify(resultado), 200
 
-# Obtener un país por ID
-@futbol_bp.route("/futbol/<int:pais_id>", methods=["GET"])
+# Obtener un país por ID con sus mundiales
+@futbol_bp.route("/<int:pais_id>", methods=["GET"])
 def get_pais(pais_id):
     pais = pais_repo.get_pais_by_id(pais_id)
     if not pais:
         return jsonify({"error": "La selección no se encontró"}), 404
-    return jsonify({"id": pais.id, "nombre_pais": pais.nombre_pais}), 200
+    
+    return jsonify({
+        "id": pais.id,
+        "nombre_pais": pais.nombre_pais,
+        "mundiales": [
+            {"id": m.id, "title": m.title, "pais_id": m.pais_id}
+            for m in pais.mundiales
+        ]
+    }), 200
 
 # Crear país
-@futbol_bp.route("/futbol", methods=["POST"])
+@futbol_bp.route("/", methods=["POST"])
 def create_pais():
     data = request.json
     if not data or "nombre_pais" not in data:
         return jsonify({"error": "Falta el campo nombre_pais"}), 400
     
+    # Crear país en el repositorio (allí se hace add + commit)
     nuevo_pais = pais_repo.create_pais(data["nombre_pais"])
-    return jsonify({"id": nuevo_pais.id, "nombre_pais": nuevo_pais.nombre_pais}), 201
+    
+    return jsonify({
+        "id": nuevo_pais.id,
+        "nombre_pais": nuevo_pais.nombre_pais,
+        "mundiales": []
+    }), 201
 
 # Actualizar país
-@futbol_bp.route("/futbol/<int:pais_id>", methods=["PUT"])
+@futbol_bp.route("/<int:pais_id>", methods=["PUT"])
 def update_pais(pais_id):
     data = request.json
     if not data or "nombre_pais" not in data:
@@ -40,10 +63,17 @@ def update_pais(pais_id):
     if not pais:
         return jsonify({"error": "País no encontrado"}), 404
     
-    return jsonify({"id": pais.id, "nombre_pais": pais.nombre_pais}), 200
+    return jsonify({
+        "id": pais.id,
+        "nombre_pais": pais.nombre_pais,
+        "mundiales": [
+            {"id": m.id, "title": m.title, "pais_id": m.pais_id}
+            for m in pais.mundiales
+        ]
+    }), 200
 
 # Eliminar país
-@futbol_bp.route("/futbol/<int:pais_id>", methods=["DELETE"])
+@futbol_bp.route("/<int:pais_id>", methods=["DELETE"])
 def delete_pais(pais_id):
     pais = pais_repo.delete_pais(pais_id)
     if not pais:
