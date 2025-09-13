@@ -1,10 +1,24 @@
 from flask import Flask
-from controllers.futbol_controller import futbol_bp  # Importar el Blueprint
+from config.config import Config
+from extensions import db
+from controllers.futbol_controller import futbol_bp
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
+    # Inicializar extensiones
+    db.init_app(app)
 
-app.register_blueprint(futbol_bp)
+    # Crear tablas
+    with app.app_context():
+        db.create_all()
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    # Registrar blueprints
+    app.register_blueprint(futbol_bp, url_prefix="/futbol")
+
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(host="0.0.0.0", port=5000, debug=True)
