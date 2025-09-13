@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from repository.futbol_repository import PaisRepository
-from config.database import db_session  # Ajusta según tu proyecto
+from config.database import get_db_session
 
 futbol_bp = Blueprint('futbol_bp', __name__)
 pais_repo = PaisRepository(db_session)
