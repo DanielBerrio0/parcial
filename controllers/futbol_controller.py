@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from repository.futbol_repository import PaisRepository
+from extensions import db
+from models.futbol_model import Mundiales
 
 futbol_bp = Blueprint("futbol_bp", __name__)
 pais_repo = PaisRepository()
@@ -43,13 +45,34 @@ def create_pais():
     if not data or "nombre_pais" not in data:
         return jsonify({"error": "Falta el campo nombre_pais"}), 400
     
-    # Crear país en el repositorio (allí se hace add + commit)
     nuevo_pais = pais_repo.create_pais(data["nombre_pais"])
     
     return jsonify({
         "id": nuevo_pais.id,
         "nombre_pais": nuevo_pais.nombre_pais,
         "mundiales": []
+    }), 201
+
+# Crear un mundial asociado a un país
+@futbol_bp.route("/<int:pais_id>/mundiales", methods=["POST"])
+def create_mundial(pais_id):
+    data = request.json
+    if not data or "title" not in data:
+        return jsonify({"error": "Falta el campo title"}), 400
+
+    pais = pais_repo.get_pais_by_id(pais_id)
+    if not pais:
+        return jsonify({"error": "País no encontrado"}), 404
+
+    nuevo_mundial = Mundiales(title=data["title"], pais_id=pais.id)
+
+    db.session.add(nuevo_mundial)
+    db.session.commit()
+
+    return jsonify({
+        "id": nuevo_mundial.id,
+        "title": nuevo_mundial.title,
+        "pais_id": nuevo_mundial.pais_id
     }), 201
 
 # Actualizar país

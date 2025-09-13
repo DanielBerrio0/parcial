@@ -2,7 +2,6 @@ from extensions import db
 from models.futbol_model import Paises
 
 class PaisRepository:
-
     def get_all_paises(self):
         return Paises.query.all()
 
@@ -12,7 +11,7 @@ class PaisRepository:
     def create_pais(self, nombre_pais: str):
         nuevo_pais = Paises(nombre_pais=nombre_pais)
         db.session.add(nuevo_pais)
-        db.session.commit()
+        db.session.commit()  # <- guarda en la base
         return nuevo_pais
 
     def update_pais(self, pais_id: int, nombre_pais: str):
@@ -20,7 +19,7 @@ class PaisRepository:
         if not pais:
             return None
         pais.nombre_pais = nombre_pais
-        db.session.commit()
+        db.session.commit()  # <- guarda cambios
         return pais
 
     def delete_pais(self, pais_id: int):
@@ -28,5 +27,5 @@ class PaisRepository:
         if not pais:
             return None
         db.session.delete(pais)
-        db.session.commit()
+        db.session.commit()  # <- aplica borrado
         return pais
