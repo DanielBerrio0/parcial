@@ -7,14 +7,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Inicializar extensiones
+
     db.init_app(app)
 
-    # Crear tablas
+
     with app.app_context():
         db.create_all()
 
-    # Registrar blueprints
+
     app.register_blueprint(futbol_bp, url_prefix="/futbol")
 
     return app

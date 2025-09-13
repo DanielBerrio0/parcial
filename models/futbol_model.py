@@ -6,7 +6,7 @@ class Paises(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre_pais = db.Column(db.String(255), nullable=False)
     
-    # Relación con Mundiales
+
     mundiales = db.relationship(
         'Mundiales',
         back_populates='pais',
