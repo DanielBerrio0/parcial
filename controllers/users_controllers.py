@@ -8,6 +8,7 @@ service = UsersService(get_db_session())
 
 user_bp = Blueprint('users', __name__)
 
+
 @user_bp.route('/login', methods=['POST'])
 def login():
     """
