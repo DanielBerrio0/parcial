@@ -1,7 +1,7 @@
 from services.users_services import UsersService
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
-
+from flask_jwt_extended.exceptions import NoAuthorizationError
 from config.database import get_db_session
 
 service = UsersService(get_db_session())
