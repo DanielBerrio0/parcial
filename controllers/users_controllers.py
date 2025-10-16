@@ -1,8 +1,13 @@
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from services.users_services import UsersService
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from config.database import get_db_session
+from flask import current_app
 
 service = UsersService(get_db_session())
 
