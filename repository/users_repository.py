@@ -1,4 +1,3 @@
-# repository/user_repository.py
 from models.users_model import User
 from extensions import db
 

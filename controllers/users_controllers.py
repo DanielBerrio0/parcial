@@ -1,4 +1,3 @@
-# controllers/users_controllers.py
 import logging
 from services.users_services import UsersService
 from flask import Blueprint, request, jsonify
@@ -23,7 +22,6 @@ def login():
 
     user = service.authenticate_user(username, password)
     if user:
-        # ✅ identity ahora es un string (para evitar el error "Subject must be a string")
         access_token = create_access_token(identity=str(user.id))
         return jsonify({'access_token': access_token}), 200
 
@@ -34,7 +32,7 @@ def login():
 @user_bp.route('/users', methods=['GET'])
 @jwt_required()
 def get_users():
-    current_user_id = get_jwt_identity()  # ✅ obtiene el id del token
+    current_user_id = get_jwt_identity()
     logger.info(f"Usuario autenticado con ID: {current_user_id}")
 
     users = service.get_all_users()

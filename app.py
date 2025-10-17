@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask
 from flask_jwt_extended import JWTManager  # <--- IMPORTANTE
 from config.config import Config
