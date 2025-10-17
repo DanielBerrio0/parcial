@@ -3,6 +3,7 @@ import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from extensions import db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,6 +16,7 @@ SQLITE_URI = 'sqlite:///bands_local.db'
 # Configurar Flask y Flask-SQLAlchemy
 app = Flask(__name__)
 
+# Asignar la URI de la base de datos (ya sea MySQL o SQLite)
 if MYSQL_URI:
     app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URI
 else:
@@ -23,8 +25,8 @@ else:
 # Desactivar el seguimiento de modificaciones en objetos de la base de datos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Inicializar la extensión SQLAlchemy
-db = SQLAlchemy(app)
+# Inicializar la extensión SQLAlchemy con la app
+db.init_app(app)
 
 # Crear las tablas en la base de datos
 with app.app_context():

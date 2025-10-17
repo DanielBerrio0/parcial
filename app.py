@@ -1,6 +1,6 @@
 from flask import Flask
 from config.config import Config
-from extensions import db 
+from extensions import db  
 from controllers.futbol_controller import futbol_bp
 from controllers.users_controllers import user_bp
 from config.jwt import JWT_ACCESS_TOKEN_EXPIRES, JWT_HEADER_NAME, JWT_HEADER_TYPE, JWT_SECRET_KEY, JWT_TOKEN_LOCATION
