@@ -1,6 +1,6 @@
 from flask import Flask
 from config.config import Config
-from extensions import db  # Importa el objeto db desde extensions.py
+from extensions import db 
 from controllers.futbol_controller import futbol_bp
 from controllers.users_controllers import user_bp
 from config.jwt import JWT_ACCESS_TOKEN_EXPIRES, JWT_HEADER_NAME, JWT_HEADER_TYPE, JWT_SECRET_KEY, JWT_TOKEN_LOCATION
@@ -14,7 +14,7 @@ def create_app():
     app.config.from_object(Config)
 
     # Inicializar la extensión db con la aplicación
-    db.init_app(app)  # Asegúrate de que esta línea esté presente
+    db.init_app(app)  # Esta línea es clave
 
     # Crear las tablas en la base de datos
     with app.app_context():
