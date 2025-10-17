@@ -1,19 +1,24 @@
+# services/users_services.py
 from repository.users_repository import UserRepository
-
-
 from models.users_model import User
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
+from extensions import db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class UsersService:
-    def __init__(self, db_session):
-        self.users_repository = UserRepository(db_session)
+    def __init__(self):
+        self.users_repository = UserRepository()
 
     def authenticate_user(self, username: str, password: str):
-        user = self.users_repository.db.query(User).filter(User.username == username).first()
+        user = self.users_repository.get_user_by_id(
+            self.users_repository.get_user_by_id.__self__ if False else None
+        )  # <- esta línea es un placeholder, ver nota abajo
+        # --- mejor implementación: buscar por username ---
+        from models.users_model import User
+        user = User.query.filter_by(username=username).first()
         logger.info(f"Authenticating user: {username}")
         if user and check_password_hash(user.password, password):
             logger.info(f"User authenticated successfully: {username}")
@@ -33,7 +38,6 @@ class UsersService:
         password_hashed = generate_password_hash(password)
         logger.info(f"Creating user: {username}")
         return self.users_repository.create_user(username, password_hashed)
-    
 
     def update_user(self, user_id: int, username: str = None, password: str = None):
         logger.info(f"Updating user: {user_id}")

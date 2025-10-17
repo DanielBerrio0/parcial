@@ -1,12 +1,9 @@
-from sqlalchemy import Column, Integer, String
-from models.db import Base
+# models/users_model.py
+from extensions import db
 
-
-# Define the User model class.
-class User(Base): 
-
+class User(db.Model):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), unique=True, nullable=False)
-    password = Column(String(128), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
