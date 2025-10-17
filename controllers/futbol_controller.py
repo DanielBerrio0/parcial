@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from repository.futbol_repository import PaisRepository
 from extensions import db
-from models.futbol_model import Mundiales
+from models.futbol_model import Paises, Mundiales
 
 futbol_bp = Blueprint("futbol_bp", __name__)
 pais_repo = PaisRepository()

@@ -1,12 +1,9 @@
-
-
 import os
 import logging
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import OperationalError
-from models.futbol_model import Base
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+
 logging.basicConfig(level=logging.INFO)
 
 # Cargar variables de entorno desde .env
@@ -15,30 +12,31 @@ load_dotenv()
 MYSQL_URI = os.getenv('MYSQL_URI')
 SQLITE_URI = 'sqlite:///bands_local.db'
 
-def get_engine():
-    """
-    Intenta crear una conexión con MySQL. Si falla, usa SQLite local.
-    """
-    if MYSQL_URI:
-        try:
-            engine = create_engine(MYSQL_URI, echo=True)
-            # Probar conexión
-            conn = engine.connect()
-            conn.close()
-            logging.info('Conexión a MySQL exitosa.')
-            return engine
-        except OperationalError:
-            logging.warning('No se pudo conectar a MySQL. Usando SQLite local.')
-    # Fallback a SQLite
-    engine = create_engine(SQLITE_URI, echo=True)
-    return engine
+# Configurar Flask y Flask-SQLAlchemy
+app = Flask(__name__)
 
-engine = get_engine()
-Session = sessionmaker(bind=engine)
-Base.metadata.create_all(engine)
+if MYSQL_URI:
+    app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URI
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLITE_URI
 
+# Desactivar el seguimiento de modificaciones en objetos de la base de datos
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicializar la extensión SQLAlchemy
+db = SQLAlchemy(app)
+
+# Crear las tablas en la base de datos
+with app.app_context():
+    try:
+        db.create_all()  # Esto crea las tablas en la base de datos si no existen
+        logging.info('Las tablas han sido creadas exitosamente.')
+    except Exception as e:
+        logging.error(f'Error al crear las tablas: {e}')
+
+# Función para obtener la sesión de la base de datos
 def get_db_session():
     """
     Retorna una nueva sesión de base de datos para ser utilizada en los servicios o controladores.
     """
-    return Session()
+    return db.session

@@ -1,19 +1,18 @@
-from extensions import db
+from extensions import db  # Importa db desde extensions.py
 
-class Paises(db.Model):
+class Paises(db.Model):  # Hereda de db.Model
     __tablename__ = 'paiss'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre_pais = db.Column(db.String(255), nullable=False)
     
-
     mundiales = db.relationship(
         'Mundiales',
         back_populates='pais',
         cascade='all, delete-orphan'
     )
 
-class Mundiales(db.Model):
+class Mundiales(db.Model):  # Hereda de db.Model
     __tablename__ = 'mundial'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -22,4 +21,3 @@ class Mundiales(db.Model):
     
     # Relación inversa
     pais = db.relationship('Paises', back_populates='mundiales')
-
