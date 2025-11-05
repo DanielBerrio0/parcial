@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_jwt_extended import JWTManager  # <--- IMPORTANTE
 from config.config import Config
 from extensions import db
@@ -38,6 +38,19 @@ def create_app():
     # --- Blueprints ---
     app.register_blueprint(futbol_bp, url_prefix="/futbol")
     app.register_blueprint(user_bp, url_prefix="/")
+
+    # --- Frontend Routes ---
+    @app.route('/')
+    def home():
+        return render_template('login.html')
+
+    @app.route('/register')
+    def register():
+        return render_template('register.html')
+
+    @app.route('/dashboard')
+    def dashboard():
+        return render_template('dashboard.html')
 
     return app
 
