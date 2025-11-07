@@ -1,7 +1,6 @@
 // Función para verificar si el token es válido
 async function verificarToken() {
     const token = localStorage.getItem('token');
-    console.log('Token almacenado:', token);
     
     if (!token) {
         console.log('No hay token, redirigiendo a login');
@@ -28,16 +27,22 @@ async function verificarToken() {
         return true;
     } catch (error) {
         console.error('Error al verificar token:', error);
-        mostrarAlerta('Error de conexión', 'danger');
+        mostrarAlerta('Error de conexión. Por favor, intente más tarde.', 'danger');
         return false;
     }
 }
 
-// Verificar el token al cargar la página
+// Verificar el token y cargar datos al iniciar
 document.addEventListener('DOMContentLoaded', async function() {
+    // Mostrar indicador de carga
+    mostrarSpinner(true);
+    
     if (await verificarToken()) {
         await cargarPaises();
     }
+    
+    // Ocultar indicador de carga
+    mostrarSpinner(false);
 });
 
 // Función para cargar la lista de países
@@ -97,10 +102,8 @@ async function cargarPaises() {
     }
 }
 
-// Función para mostrar alertas
+// Funciones de utilidad
 function mostrarAlerta(mensaje, tipo) {
-    console.log('Mostrando alerta:', mensaje, tipo);
-    
     // Eliminar alertas anteriores
     const alertasAnteriores = document.querySelectorAll('.alert');
     alertasAnteriores.forEach(alerta => alerta.remove());
@@ -123,6 +126,22 @@ function mostrarAlerta(mensaje, tipo) {
             alertDiv.remove();
         }
     }, 3000);
+}
+
+function mostrarSpinner(mostrar) {
+    const spinner = document.querySelector('.spinner-container');
+    if (!spinner && mostrar) {
+        const spinnerHTML = `
+            <div class="spinner-container position-fixed top-50 start-50 translate-middle">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', spinnerHTML);
+    } else if (spinner && !mostrar) {
+        spinner.remove();
+    }
 }
 
 // Manejar el guardado del país
