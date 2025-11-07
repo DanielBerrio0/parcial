@@ -17,7 +17,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('token', data.access_token);
             window.location.href = '/dashboard';
         } else {
             errorMessage.textContent = data.message || 'Usuario no encontrado. Por favor regístrese.';
