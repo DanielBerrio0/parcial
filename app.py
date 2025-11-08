@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from flask_jwt_extended import JWTManager  # <--- IMPORTANTE
+from flask import Flask, jsonify
+from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from config.config import Config
 from extensions import db
@@ -43,18 +43,24 @@ def create_app():
     app.register_blueprint(futbol_bp, url_prefix="/futbol")
     app.register_blueprint(user_bp, url_prefix="/")
 
-    # --- Frontend Routes ---
+    # --- API Root ---
     @app.route('/')
     def home():
-        return render_template('login.html')
-
-    @app.route('/register')
-    def register():
-        return render_template('register.html')
-
-    @app.route('/dashboard')
-    def dashboard():
-        return render_template('dashboard.html')
+        return jsonify({
+            "message": "Backend API - Sistema de Autenticación",
+            "version": "1.0",
+            "endpoints": {
+                "auth": {
+                    "login": "/login",
+                    "register": "/registry"
+                },
+                "users": {
+                    "list": "/users",
+                    "detail": "/users/<id>"
+                },
+                "futbol": "/futbol"
+            }
+        })
 
     return app
 

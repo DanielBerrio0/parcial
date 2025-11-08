@@ -18,3 +18,8 @@ env/
 node_modules/
 dist/
 .DS_Store
+
+# Frontend (moved to separate repo)
+templates/
+static/
+auth-frontend/
