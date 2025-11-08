@@ -47,19 +47,29 @@ def create_app():
     @app.route('/')
     def home():
         return jsonify({
-            "message": "Backend API - Sistema de Autenticación",
-            "version": "1.0",
+            "api": "Parcial Backend API",
+            "author": "DanielBerrio0",
+            "description": "API RESTful con Flask, SQLAlchemy, JWT y estructura modular para gestión de usuarios y fútbol.",
             "endpoints": {
-                "auth": {
-                    "login": "/login",
-                    "register": "/registry"
-                },
-                "users": {
-                    "list": "/users",
-                    "detail": "/users/<id>"
-                },
-                "futbol": "/futbol"
-            }
+                "GET /": "Información de la API",
+                "GET /health": "Health check",
+                "POST /login": "Login y obtención de JWT",
+                "POST /registry": "Registro de usuario",
+                "GET /users": "Listado de usuarios (requiere JWT)",
+                "GET /users/<id>": "Obtener usuario por ID",
+                "PUT /users/<id>": "Actualizar usuario",
+                "DELETE /users/<id>": "Eliminar usuario",
+                "GET /futbol": "Endpoints de gestión de fútbol"
+            },
+            "repository": "https://github.com/DanielBerrio0/parcial",
+            "status": "OK"
+        })
+    
+    @app.route('/health')
+    def health():
+        return jsonify({
+            "status": "OK",
+            "message": "API is running"
         })
 
     return app
