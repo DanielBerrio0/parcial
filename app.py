@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_jwt_extended import JWTManager  # <--- IMPORTANTE
+from flask_cors import CORS
 from config.config import Config
 from extensions import db
 from controllers.futbol_controller import futbol_bp
@@ -15,6 +16,9 @@ from config.jwt import (
 
 def create_app():
     app = Flask(__name__)
+    
+    # Habilitar CORS para permitir peticiones desde el frontend
+    CORS(app, resources={r"/*": {"origins": "*"}})
     
     # Cargar configuración general
     app.config.from_object(Config)
@@ -57,4 +61,6 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
