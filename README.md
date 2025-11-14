@@ -6,7 +6,7 @@ Este proyecto implementa una API REST desarrollada en Flask para gestionar selec
 
 El backend está desplegado en Railway y accesible en:
 ```
-https://[tu-proyecto]-production.up.railway.app
+backendapifutbol.up.railway.app
 ```
 
 ## 📋 Endpoints Disponibles
